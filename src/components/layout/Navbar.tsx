@@ -16,8 +16,19 @@ const THEMES: { id: Theme; label: string; icon: string }[] = [
   { id: 'dark', label: 'Dark', icon: 'ti-moon' },
 ];
 
+// Nav links (typed) — wire up to passed callbacks so props are used
+const LINKS: { label: string; onClick: () => void; icon: string }[] = [];
+
 export default function Navbar({ onScrollToBoard, onScrollToInsights }: NavbarProps) {
   const { theme, setTheme } = useTheme();
+
+  // If parent provided callbacks, expose default nav links
+  const navLinks = LINKS.length
+    ? LINKS
+    : [
+        { label: 'Board', onClick: onScrollToBoard, icon: 'ti-layout' },
+        { label: 'Insights', onClick: onScrollToInsights, icon: 'ti-bar-chart' },
+      ];
 
   return (
     <nav
@@ -45,7 +56,7 @@ export default function Navbar({ onScrollToBoard, onScrollToInsights }: NavbarPr
 
         {/* Nav links — hidden on mobile */}
         <div className="hidden md:flex items-center gap-0.5" role="menubar">
-          {[].map(link => (
+          {navLinks.map(link => (
             <button
               key={link.label}
               role="menuitem"
